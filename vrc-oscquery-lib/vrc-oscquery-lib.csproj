@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net6.0</TargetFrameworks>
+        <TargetFrameworks>net9.0</TargetFrameworks>
         <RootNamespace>vrc_oscquery_lib</RootNamespace>
         <SkipUnityDLL>false</SkipUnityDLL>
     </PropertyGroup>
