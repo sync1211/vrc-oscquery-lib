@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace VRC.OSCQuery
 {
     public class HostInfo
     {
-        [JsonProperty(Keys.NAME)]
+        [JsonInclude]
         public string name;
 
-        [JsonProperty(Keys.EXTENSIONS)] public Dictionary<string, bool> extensions = new Dictionary<string, bool>()
+        [JsonInclude]
+        public Dictionary<string, bool> extensions = new Dictionary<string, bool>()
         {
             { Attributes.ACCESS, true },
             { Attributes.CLIPMODE, false },
@@ -17,13 +19,13 @@ namespace VRC.OSCQuery
             { Attributes.VALUE, true },
         };
         
-        [JsonProperty(Keys.OSC_IP)]
+        [JsonInclude]
         public string oscIP;
         
-        [JsonProperty(Keys.OSC_PORT)]
+        [JsonInclude]
         public int oscPort = OSCQueryService.DefaultPortOsc;
 
-        [JsonProperty(Keys.OSC_TRANSPORT)] 
+        [JsonInclude]
         public string oscTransport = Keys.OSC_TRANSPORT_UDP;
 
         /// <summary>
@@ -36,8 +38,7 @@ namespace VRC.OSCQuery
 
         public override string ToString()
         {
-            var result = JsonConvert.SerializeObject(this);
-            return result;
+            return JsonSerializer.Serialize(this);
         }
 
         public class Keys

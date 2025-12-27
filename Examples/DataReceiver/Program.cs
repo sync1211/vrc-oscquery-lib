@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Terminal.Gui;
 
 namespace VRC.OSCQuery.Examples.DataReceiver
@@ -58,7 +58,7 @@ namespace VRC.OSCQuery.Examples.DataReceiver
                 if (response.IsSuccessStatusCode)
                 {
                     var responseString = await response.Content.ReadAsStringAsync();
-                    var result = JsonConvert.DeserializeObject<OSCQueryRootNode>(responseString);
+                    var result = JsonSerializer.Deserialize<OSCQueryRootNode>(responseString);
 
                     var sb = new StringBuilder();
                     foreach (var pair in result.Contents)

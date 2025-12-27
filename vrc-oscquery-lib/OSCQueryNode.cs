@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace VRC.OSCQuery
 {
@@ -113,7 +114,7 @@ namespace VRC.OSCQuery
 
         public static OSCQueryRootNode FromString(string json)
         {
-            var tree = JsonConvert.DeserializeObject<OSCQueryRootNode>(json);
+            var tree = JsonSerializer.Deserialize<OSCQueryRootNode>(json);
             tree.RebuildLookup();
             return tree;
         }
@@ -128,24 +129,25 @@ namespace VRC.OSCQuery
             FullPath = fullPath;
         }
         
-        [JsonProperty(Attributes.DESCRIPTION)]
+        [JsonInclude]
         public string Description;
 
-        [JsonProperty(Attributes.FULL_PATH)] public string FullPath;
+        [JsonInclude]
+        public string FullPath;
 
-        [JsonProperty(Attributes.ACCESS)]
+        [JsonInclude]
         public Attributes.AccessValues Access;
 
-        [JsonProperty(Attributes.CONTENTS)]
+        [JsonInclude]
         public Dictionary<string, OSCQueryNode> Contents;
 
-        [JsonProperty(Attributes.TYPE)]
+        [JsonInclude]
         public string OscType;
 
-        [JsonProperty(Attributes.VALUE)]
+        [JsonInclude]
         public object[] Value;
 
-        [JsonIgnore] 
+        [JsonIgnore]
         public string ParentPath {
             get
             {
@@ -160,19 +162,7 @@ namespace VRC.OSCQuery
 
         public override string ToString()
         {
-            var result = JsonConvert.SerializeObject(this, WriteSettings);
-            return result;
+            return JsonSerializer.Serialize(this);
         }
-
-        public static void AddConverter(JsonConverter c)
-        {
-            WriteSettings.Converters.Add(c);
-        }
-
-        private static JsonSerializerSettings WriteSettings = new JsonSerializerSettings()
-        {
-            NullValueHandling = NullValueHandling.Ignore,
-        };
-        
     }
 }

@@ -1,6 +1,6 @@
 using System.Net;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 
 namespace VRC.OSCQuery.Tests
 {
@@ -76,9 +76,9 @@ namespace VRC.OSCQuery.Tests
             var response = await new HttpClient().GetAsync($"http://localhost:{port}{path}");
 
             var responseString = await response.Content.ReadAsStringAsync();
-            var responseObject = JObject.Parse(responseString);
+            var responseObject = JsonNode.Parse(responseString);
             
-            Assert.That(responseObject[Attributes.VALUE][0]!.Value<int>(), Is.EqualTo(randomInt));
+            Assert.That(responseObject[Attributes.VALUE][0]!.GetValue<int>(), Is.EqualTo(randomInt));
             
             service.Dispose();
         }
@@ -106,9 +106,9 @@ namespace VRC.OSCQuery.Tests
             var response = await new HttpClient().GetAsync($"http://localhost:{port}{path}");
 
             var responseString = await response.Content.ReadAsStringAsync();
-            var responseObject = JObject.Parse(responseString);
+            var responseObject = JsonNode.Parse(responseString);
             
-            Assert.That(responseObject[Attributes.VALUE][0]!.Value<bool>(), Is.EqualTo(true));
+            Assert.That(responseObject[Attributes.VALUE][0]!.GetValue<bool>(), Is.EqualTo(true));
             
             service.Dispose();
         }
@@ -149,7 +149,7 @@ namespace VRC.OSCQuery.Tests
             Assert.True(response.IsSuccessStatusCode);
             
             var responseString = await response.Content.ReadAsStringAsync();
-            var responseObject = JsonConvert.DeserializeObject<OSCQueryNode>(responseString);
+            var responseObject = JsonSerializer.Deserialize<OSCQueryNode>(responseString);
             
             Assert.That(responseObject.Contents[name1].Value[0], Is.EqualTo(randomInt1));
             Assert.That(responseObject.Contents[name2].Value[0], Is.EqualTo(randomInt2));
@@ -222,7 +222,7 @@ namespace VRC.OSCQuery.Tests
             Assert.True(response.IsSuccessStatusCode);
             
             var responseString = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<OSCQueryNode>(responseString);
+            var result = JsonSerializer.Deserialize<OSCQueryNode>(responseString);
             
             Assert.NotNull(result.Contents["foo"].Contents["bar"].Contents["baz"]);
         }
@@ -266,9 +266,9 @@ namespace VRC.OSCQuery.Tests
             tokenSource.CancelAfter(TimeSpan.FromSeconds(5));
             response = await new HttpClient().GetAsync($"http://localhost:{port}{path}", tokenSource.Token);
             var responseString = await response.Content.ReadAsStringAsync();
-            var responseObject = JObject.Parse(responseString);
+            var responseObject = JsonNode.Parse(responseString);
             
-            Assert.That(responseObject[Attributes.VALUE][0]!.Value<int>(), Is.EqualTo(value));
+            Assert.That(responseObject[Attributes.VALUE][0]!.GetValue<int>(), Is.EqualTo(value));
             
             service.Dispose();
         }
