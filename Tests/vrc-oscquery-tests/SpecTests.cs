@@ -75,10 +75,10 @@ namespace VRC.OSCQuery.Tests
             );
             var response = await new HttpClient().GetAsync($"http://localhost:{port}{path}");
 
-            var responseString = await response.Content.ReadAsStringAsync();
-            var responseObject = JsonNode.Parse(responseString);
+            string responseString = await response.Content.ReadAsStringAsync();
+            JsonDocument responseObject = JsonDocument.Parse(responseString);
             
-            Assert.That(responseObject[Attributes.VALUE][0]!.GetValue<int>(), Is.EqualTo(randomInt));
+            Assert.That(responseObject.RootElement.GetProperty(Attributes.VALUE)[0]!.GetInt32(), Is.EqualTo(randomInt));
             
             service.Dispose();
         }
@@ -105,10 +105,10 @@ namespace VRC.OSCQuery.Tests
             
             var response = await new HttpClient().GetAsync($"http://localhost:{port}{path}");
 
-            var responseString = await response.Content.ReadAsStringAsync();
-            var responseObject = JsonNode.Parse(responseString);
+            string responseString = await response.Content.ReadAsStringAsync();
+            JsonDocument responseObject = JsonDocument.Parse(responseString);
             
-            Assert.That(responseObject[Attributes.VALUE][0]!.GetValue<bool>(), Is.EqualTo(true));
+            Assert.That(responseObject.RootElement.GetProperty(Attributes.VALUE)[0]!.GetBoolean(), Is.EqualTo(true));
             
             service.Dispose();
         }
@@ -149,7 +149,7 @@ namespace VRC.OSCQuery.Tests
             Assert.True(response.IsSuccessStatusCode);
             
             var responseString = await response.Content.ReadAsStringAsync();
-            var responseObject = JsonSerializer.Deserialize<OSCQueryNode>(responseString);
+            OSCQueryNode responseObject = JsonSerializer.Deserialize<OSCQueryNode>(responseString);
             
             Assert.That(responseObject.Contents[name1].Value[0], Is.EqualTo(randomInt1));
             Assert.That(responseObject.Contents[name2].Value[0], Is.EqualTo(randomInt2));
@@ -265,11 +265,11 @@ namespace VRC.OSCQuery.Tests
             var tokenSource = new CancellationTokenSource();
             tokenSource.CancelAfter(TimeSpan.FromSeconds(5));
             response = await new HttpClient().GetAsync($"http://localhost:{port}{path}", tokenSource.Token);
-            var responseString = await response.Content.ReadAsStringAsync();
-            var responseObject = JsonNode.Parse(responseString);
-            
-            Assert.That(responseObject[Attributes.VALUE][0]!.GetValue<int>(), Is.EqualTo(value));
-            
+            string responseString = await response.Content.ReadAsStringAsync();
+            JsonDocument responseObject = JsonDocument.Parse(responseString);
+
+            Assert.That(responseObject.RootElement.GetProperty(Attributes.VALUE)[0].GetInt32(), Is.EqualTo(value));
+
             service.Dispose();
         }
         

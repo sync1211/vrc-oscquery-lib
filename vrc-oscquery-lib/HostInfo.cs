@@ -7,9 +7,11 @@ namespace VRC.OSCQuery
     public class HostInfo
     {
         [JsonInclude]
+        [JsonPropertyName(Keys.NAME)]
         public string name;
 
         [JsonInclude]
+        [JsonPropertyName(Keys.EXTENSIONS)]
         public Dictionary<string, bool> extensions = new Dictionary<string, bool>()
         {
             { Attributes.ACCESS, true },
@@ -20,12 +22,15 @@ namespace VRC.OSCQuery
         };
         
         [JsonInclude]
+        [JsonPropertyName(Keys.OSC_IP)]
         public string oscIP;
-        
+
         [JsonInclude]
+        [JsonPropertyName(Keys.OSC_PORT)]
         public int oscPort = OSCQueryService.DefaultPortOsc;
 
         [JsonInclude]
+        [JsonPropertyName(Keys.OSC_TRANSPORT)]
         public string oscTransport = Keys.OSC_TRANSPORT_UDP;
 
         /// <summary>

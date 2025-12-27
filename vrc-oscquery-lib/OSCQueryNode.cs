@@ -130,25 +130,32 @@ namespace VRC.OSCQuery
         }
         
         [JsonInclude]
+        [JsonPropertyName(Attributes.DESCRIPTION)]
         public string Description;
 
         [JsonInclude]
+        [JsonPropertyName(Attributes.FULL_PATH)]
         public string FullPath;
 
         [JsonInclude]
+        [JsonPropertyName(Attributes.ACCESS)]
         public Attributes.AccessValues Access;
 
         [JsonInclude]
+        [JsonPropertyName(Attributes.CONTENTS)]
         public Dictionary<string, OSCQueryNode> Contents;
 
         [JsonInclude]
+        [JsonPropertyName(Attributes.TYPE)]
         public string OscType;
 
         [JsonInclude]
+        [JsonPropertyName(Attributes.VALUE)]
         public object[] Value;
 
         [JsonIgnore]
-        public string ParentPath {
+        public string ParentPath
+        {
             get
             {
                 int length = Math.Max(1, FullPath.LastIndexOf("/"));
