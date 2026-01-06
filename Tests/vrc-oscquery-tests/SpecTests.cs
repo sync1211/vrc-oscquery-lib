@@ -150,8 +150,9 @@ namespace VRC.OSCQuery.Tests
             Assert.True(response.IsSuccessStatusCode);
             
             var responseString = await response.Content.ReadAsStringAsync();
-            OSCQueryNode responseObject = JsonSerializer.Deserialize<OSCQueryNode>(responseString);
+            OSCQueryNode? responseObject = JsonSerializer.Deserialize<OSCQueryNode>(responseString);
 
+            Assert.That(responseObject, Is.Not.Null);
             Assert.That(((JsonElement) responseObject.Contents[name1].Value[0]).Deserialize<int>(), Is.EqualTo(randomInt1));
             Assert.That(((JsonElement) responseObject.Contents[name2].Value[0]).Deserialize<int>(), Is.EqualTo(randomInt2));
             
@@ -225,6 +226,7 @@ namespace VRC.OSCQuery.Tests
             var responseString = await response.Content.ReadAsStringAsync();
             var result = JsonSerializer.Deserialize<OSCQueryNode>(responseString);
             
+            Assert.NotNull(result);
             Assert.NotNull(result.Contents["foo"].Contents["bar"].Contents["baz"]);
         }
         
