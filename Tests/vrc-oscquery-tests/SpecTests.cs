@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using vrc_oscquery_lib.JSON;
 
 namespace VRC.OSCQuery.Tests
 {
@@ -78,7 +79,7 @@ namespace VRC.OSCQuery.Tests
             string responseString = await response.Content.ReadAsStringAsync();
             JsonDocument responseObject = JsonDocument.Parse(responseString);
             
-            Assert.That(responseObject.RootElement.GetProperty(Attributes.VALUE)[0]!.GetInt32(), Is.EqualTo(randomInt));
+            Assert.That(responseObject.RootElement.GetProperty(Attributes.VALUE)[0]!.Deserialize<int>(), Is.EqualTo(randomInt));
             
             service.Dispose();
         }
@@ -99,7 +100,7 @@ namespace VRC.OSCQuery.Tests
             service.AddEndpoint<int>(
                 path, 
                 Attributes.AccessValues.ReadOnly,
-                new object[]{false}
+                new object[] {false}
             );
             service.SetValue(path, "true");
             
@@ -107,8 +108,8 @@ namespace VRC.OSCQuery.Tests
 
             string responseString = await response.Content.ReadAsStringAsync();
             JsonDocument responseObject = JsonDocument.Parse(responseString);
-            
-            Assert.That(responseObject.RootElement.GetProperty(Attributes.VALUE)[0]!.GetBoolean(), Is.EqualTo(true));
+
+            Assert.That(responseObject.RootElement.GetProperty(Attributes.VALUE)[0]!.Deserialize<bool>(), Is.EqualTo(true));
             
             service.Dispose();
         }
@@ -150,9 +151,9 @@ namespace VRC.OSCQuery.Tests
             
             var responseString = await response.Content.ReadAsStringAsync();
             OSCQueryNode responseObject = JsonSerializer.Deserialize<OSCQueryNode>(responseString);
-            
-            Assert.That(responseObject.Contents[name1].Value[0], Is.EqualTo(randomInt1));
-            Assert.That(responseObject.Contents[name2].Value[0], Is.EqualTo(randomInt2));
+
+            Assert.That(((JsonElement) responseObject.Contents[name1].Value[0]).Deserialize<int>(), Is.EqualTo(randomInt1));
+            Assert.That(((JsonElement) responseObject.Contents[name2].Value[0]).Deserialize<int>(), Is.EqualTo(randomInt2));
             
             service.Dispose();
         }
@@ -195,10 +196,10 @@ namespace VRC.OSCQuery.Tests
             var node2 = tree.GetNodeWithPath(path2);
             
             Assert.That(node1.Name, Is.EqualTo(name1));
-            Assert.That(node1.Value[0], Is.EqualTo(randomInt1));
+            Assert.That(((JsonElement) node1.Value[0]).Deserialize<int>(), Is.EqualTo(randomInt1));
             
             Assert.That(node2.Name, Is.EqualTo(name2));
-            Assert.That(node2.Value[0], Is.EqualTo(randomInt2));
+            Assert.That(((JsonElement) node2.Value[0]).Deserialize<int>(), Is.EqualTo(randomInt2));
             
             service.Dispose();
         }
