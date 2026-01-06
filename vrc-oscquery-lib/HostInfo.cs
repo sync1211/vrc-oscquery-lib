@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using vrc_oscquery_lib;
 
 namespace VRC.OSCQuery
 {
@@ -43,7 +44,7 @@ namespace VRC.OSCQuery
 
         public override string ToString()
         {
-            return JsonSerializer.Serialize(this);
+            return JsonSerializer.Serialize(this, HostInfoSerializerContext.Default.HostInfo);
         }
 
         public class Keys

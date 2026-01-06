@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Microsoft.Extensions.Logging;
+using vrc_oscquery_lib;
 
 namespace VRC.OSCQuery
 {
@@ -169,7 +170,7 @@ namespace VRC.OSCQuery
 
         public override string ToString()
         {
-            return JsonSerializer.Serialize(this);
+            return JsonSerializer.Serialize(this, OSCQueryNodeSerializerContext.Default.OSCQueryNode);
         }
     }
 }
