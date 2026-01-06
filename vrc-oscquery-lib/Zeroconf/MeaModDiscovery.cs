@@ -117,22 +117,19 @@ namespace VRC.OSCQuery
                     return;
                 }
 
-                if (response.Answers.Any(a => OSCQueryService.MatchedNames.Contains(a.CanonicalName)))
+                try
                 {
-                    try
+                    foreach (SRVRecord record in response.AdditionalRecords.OfType<SRVRecord>().Concat(response.Answers.OfType<SRVRecord>()))
                     {
-                        foreach (SRVRecord record in response.AdditionalRecords.OfType<SRVRecord>().Concat(response.Answers.OfType<SRVRecord>()))
-                        {
-                            if (record.TTL == TimeSpan.Zero)
-                                RemoveMatchedService(record);
-                            else
-                                AddMatchedService(response, record);
-                        }
+                        if (record.TTL == TimeSpan.Zero)
+                            RemoveMatchedService(record);
+                        else
+                            AddMatchedService(response, record);
                     }
-                    catch (Exception)
-                    {
-                        Logger.LogInformation($"no SRV Records found in not parse answer from {eventArgs.RemoteEndPoint}");
-                    }
+                }
+                catch (Exception)
+                {
+                    Logger.LogInformation($"no SRV Records found in not parse answer from {eventArgs.RemoteEndPoint}");
                 }
             }
             catch (Exception e)
